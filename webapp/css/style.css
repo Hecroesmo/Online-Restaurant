@@ -1,0 +1,15 @@
+.logo {
+	font-size: 2em;
+}
+
+.padDow1em {
+	padding-bottom: 1em; 
+}
+
+.container {
+    width: 80% !important;
+}
+
+.title {
+	margin: 1rem 0;
+}
