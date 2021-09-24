@@ -133,35 +133,17 @@ public class ProductDao {
 		}
 	}
 	
-	/*
-	public Product getProductById(int id) {
-		String sql = "SELECT * FROM product WHERE pk_product = ?;";
+	public void removeProductById(int id) {
+		String sql = "DELETE FROM product WHERE pk_product=?";
 		
 		try 
 		{
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
-			ResultSet resultSet = statement.executeQuery();
-			
-			if (resultSet.next() == false) return null;
-			
-			Product product = new Product();
-			product.setPkProduct(resultSet.getInt("pk_product"));
-			product.setName(resultSet.getString("name"));
-			product.setQuantity(resultSet.getInt("quantity"));
-			product.setDescription(resultSet.getString("description"));
-			
-			product.setCategory(new CategoryDao(connection).getCategoryById(
-				resultSet.getInt("fk_category")));
-			
-			product.setImage(new ImageDao(connection).getImageById(
-				resultSet.getInt("pk_product")));
-			
-			return product;
-		} 
+			statement.executeUpdate();
+		}
 		catch (SQLException e) {
-			throw new RuntimeException("Fail to get product by id", e);
+			
 		}
 	}
-		*/
 }
