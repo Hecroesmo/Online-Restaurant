@@ -56,7 +56,7 @@
 				else {
 			%>
 				<div class="col-md-3 text-end">
-			        <a href="#" class="btn btn-outline-danger me-2"><%= account.getUsername() %></a>
+			        <a href="#" class="btn btn-outline-danger me-2 disabled"><%= account.getUsername() %></a>
 			        <a href="mvc?logic=LogoutLogic" class="btn btn-danger">Sair</a>
 			    </div>
 			<%

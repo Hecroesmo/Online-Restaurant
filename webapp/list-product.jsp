@@ -46,7 +46,11 @@
 			for (Product product : products) {
 	%>
 		        <div class="col">
-		        <a href="">
+		        <a href="show-product.jsp?id=<%= product.getPkProduct() %>
+		        	&name=<%= product.getName() %>
+		        	&description=<%= product.getDescription() %>
+		        	&quantity=<%= product.getQuantity() %>
+		        	&price=<%= product.getPrice() %>">
 		          <div class="card shadow-sm">
 					<img alt="<%= product.getName() %>" src="GetImageServlet?id=<%= product.getPkProduct() %>"
 					 class="bd-placeholder-img card-img-top" width="100%" height="225">
