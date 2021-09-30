@@ -1,3 +1,5 @@
+<%@page import="restaurant.dao.ProductDao"%>
+<%@page import="restaurant.model.Product"%>
 <%@page import="restaurant.dao.CategoryDao"%>
 <%@page import="restaurant.model.Category"%>
 <%@page import="java.sql.Connection"%>
@@ -11,7 +13,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Cadastra-se</title>
+		<title>Alterar prato</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet">
 		<link href="<c:url value="/css/form-validation.css" />" rel="stylesheet">
@@ -35,6 +37,10 @@
 	      .container {
 	      	width: 80% !important;
 	      }
+	      
+	      .hide {
+	      	display: none;
+	      }
 	    </style>
 	</head>
 	<body>
@@ -44,21 +50,23 @@
 	%>
 		<jsp:include page="admin-header.jsp"></jsp:include>
 		
-		<div  class="container">
-			<h2 style="margin: 1em 0;">Cadastrar Prato</h2>
+		<div class="container">
+			<h2 style="margin: 1em 0;">Alterar Prato</h2>
 			<form action="SaveProductServlet" method="post" enctype="multipart/form-data"
 			 class="needs-validation" novalidate>
-				
+				<span class="hide" id="id"><%= request.getParameter("id") %></span>
 				<div style="padding-bottom: 1em;" class="row g-3">
 					 <div class="col">
 			              <label for="pName" class="form-label">Nome</label>
-			              <input type="text" class="form-control" id="pName" name="name" required>
+			              <input type="text" value="<%= request.getParameter("name") %>"
+			               class="form-control" id="pName" name="name" required>
 		             </div>
 		             <div class="col">
 		             	<label for="quantity" class="form-label">Quantidade</label>
 			            <div class="input-group mb-3">
 				        	<span class="input-group-text" id="quantity">Quantidade/Unidade</span>
-				        	<input type="text" class="form-control" name="quantity">
+				        	<input type="text" value="<%= request.getParameter("quantity") %>"
+				        	 class="form-control" name="quantity">
 				     	</div>
 		             </div>
 				</div>
@@ -66,30 +74,33 @@
 					<div class="col">
 			              <div class="input-group">
 					          <span class="input-group-text">Descrição</span>
-					          <textarea class="form-control" name="description" id="description"></textarea>
+					          <textarea class="form-control" name="description"
+					           id="description"><%= request.getParameter("description") %></textarea>
 					      </div>
 					</div>
 		            <div class="col">
 		              	<div class="input-group mb-3">
 				        	<span class="input-group-text">kz</span>
-				        	<input type="text" class="form-control" name="price" placeholder="Preço">
+				        	<input type="text" value="<%= request.getParameter("price") %>"
+				        	 class="form-control" name="price" placeholder="Preço">
 				          	<span class="input-group-text">.00</span>
 				      	</div>
 		            </div>
 				</div>
 				<div style="padding-bottom: 1em;" class="row g-3">
 		             <div class="col">
-			              <label for="fcategory" class="form-label">Primeira Categoria</label>
-			              <select class="form-select" id="fcategory" name="fcategory" required>
-			              		<option value="">Selecione...</option>
+		             	<span class="hide" id="f-category"><%= request.getParameter("id") %></span>
+			            <label for="fcategory" class="form-label">Primeira Categoria</label>
+			            <select class="form-select" id="fcategory" name="fcategory" required>
+			            	<option value="">Selecione...</option>
 		<%
-			              		for (Category category : categories) {
+			              	for (Category category : categories) {
 		%>
-				                <option value="<%= category.getPkCategory() %>"><%= category.getName() %></option>
+				            <option value="<%= category.getPkCategory() %>"><%= category.getName() %></option>
 		<%
-			              		}
+			              	}
 		%>
-			              </select>
+			           	</select>
 		             </div>
 		             <div class="col">
 			              <label for="scategory" class="form-label">Segunda Categoria</label>
@@ -108,8 +119,9 @@
 			   <div style="padding-bottom: 1em;" class="row g-3">
 			   		<div class="col">
 		              	<div class="mb-3">
-				        	<input type="file" name="image" class="form-control form-control-lg">
+				        	<input type="file" value="bnbvnvncvnccv" name="image" class="form-control form-control-lg">
 				        </div>
+				        <div id="fileHelp" class="form-text">Se não deseja alterar a imagem do prato, deixe este campo vazio.</div>
           			</div>
 			   </div>
 			   <button type="submit" class="btn btn-primary text-center">Salvar</button>
@@ -118,5 +130,6 @@
 		<script src="<c:url value="/js/bootstrap.bundle.min.js"/>"></script>
 		<script src=" <c:url value="js/category-ajax.js"/> "></script>
 		<script src="<c:url value="/js/form-validation.js"/>"></script>
+		<script src="<c:url value="js/default-option.js" />"></script>
 	</body>
 </html>

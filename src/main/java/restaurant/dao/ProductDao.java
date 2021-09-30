@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import restaurant.model.Category;
 import restaurant.model.Product;
+import restaurant.utility.Constants;
 
 public class ProductDao {
 	private final Connection connection;
@@ -18,8 +20,8 @@ public class ProductDao {
 	}
 	
 	public void save(Product product) {
-		String sql = "INSERT INTO product(name, quantity, description,"
-			+ " fk_category, price) VALUES (?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO public.product(name, quantity, description,"
+			+ " price, fk_fcategory, fk_scategory, fk_tcategory) VALUES (?, ?, ?, ?, ?, ?, ?);";
 		
 		try 
 		{
@@ -27,8 +29,14 @@ public class ProductDao {
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getQuantity());
 			statement.setString(3, product.getDescription());
-			statement.setInt(4, product.getCategory().getPkCategory());
-			statement.setDouble(5, product.getPrice());
+			statement.setDouble(4, product.getPrice());
+			
+			Category [] categories = product.getCategories();
+			
+			for (int counter = 0; counter < categories.length; counter++) {
+				statement.setInt( counter + 5, categories[counter].getPkCategory() );
+			}
+			
 			statement.executeUpdate();
 		} 
 		catch (SQLException e) {
@@ -55,12 +63,16 @@ public class ProductDao {
 				product.setName(resultSet.getString("name"));
 				product.setQuantity(resultSet.getInt("quantity"));
 				product.setDescription(resultSet.getString("description"));
-				
-				product.setCategory(new CategoryDao(connection).getCategoryById(
-					resultSet.getInt("fk_category")));	
-				
 				product.setPrice(resultSet.getDouble("price"));
 				
+				Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+				
+				for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
+					int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
+					category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
+				}
+				
+				product.setCategories(category);
 				products.add(product);
 			} 
 			while (resultSet.next());
@@ -88,12 +100,16 @@ public class ProductDao {
 			product.setName(resultSet.getString("name"));
 			product.setQuantity(resultSet.getInt("quantity"));
 			product.setDescription(resultSet.getString("description"));
-			
-			product.setCategory(new CategoryDao(connection).getCategoryById(
-				resultSet.getInt("fk_category")));		
-			
 			product.setPrice(resultSet.getDouble("price"));
 			
+			Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+			
+			for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
+				int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
+				category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
+			}
+			
+			product.setCategories(category);			
 			return product;
 		} 
 		catch (SQLException e) {
@@ -117,19 +133,49 @@ public class ProductDao {
 			product.setName(resultSet.getString("name"));
 			product.setQuantity(resultSet.getInt("quantity"));
 			product.setDescription(resultSet.getString("description"));
-			
-			product.setCategory(new CategoryDao(connection).getCategoryById(
-				resultSet.getInt("fk_category")));
-			
 			product.setPrice(resultSet.getDouble("price"));
 			
+			Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+			
+			for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
+				int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
+				category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
+			}
+			
+			product.setCategories(category);			
 			product.setImage(new ImageDao(connection).getImageById(
 				resultSet.getInt("pk_product")));
-			
 			return product;
 		} 
 		catch (SQLException e) {
 			throw new RuntimeException("Fail to get product by name", e);
+		}
+	}
+	
+	public void alterProductById(Product product) {
+		String sql = "UPDATE product SET name=?, quantity=?, description=?,"
+			+ " price=?, fk_fcategory=?, fk_scategory=?, fk_tcategory=? WHERE pk_product=?";
+		
+		try 
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, product.getName());
+			statement.setInt(2, product.getQuantity());
+			statement.setString(3, product.getDescription());
+			statement.setDouble(4, product.getPrice());
+			
+			Category [] categories = product.getCategories();
+			int counter;
+			
+			for (counter = 0; counter < categories.length; counter++) {
+				statement.setInt( counter + 5, categories[counter].getPkCategory() );
+			}
+			
+			statement.setInt(counter, product.getPk_product());
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new RuntimeException("Could not alter this product", e);
 		}
 	}
 	
@@ -143,7 +189,8 @@ public class ProductDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			
+			throw new RuntimeException("Fail to remove the product", e);
 		}
 	}
+
 }

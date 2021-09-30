@@ -1,6 +1,7 @@
 package restaurant.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,20 +11,19 @@ public class Product implements Serializable {
 	private int quantity;
 	private double price;
 	private Image image;
-	private Category category;
+	private Category [] categories;
 	
 	public Product() {}
 	
-	public Product(int id, String name, String description, int quantity,
-			double price, Image image, Category category)
+	public Product(int pk_product, String name, String description,
+			int quantity, double price, Image image) 
 	{
-		this.pk_product = id;
+		this.pk_product = pk_product;
 		this.name = name;
 		this.description = description;
 		this.quantity = quantity;
 		this.price = price;
 		this.image = image;
-		this.category = category;
 	}
 
 	public int getPkProduct() {
@@ -74,21 +74,29 @@ public class Product implements Serializable {
 		this.image = image;
 	}
 
-	public Category getCategory() {
-		return category;
+	public int getPk_product() {
+		return pk_product;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setPk_product(int pk_product) {
+		this.pk_product = pk_product;
+	}
+
+	public Category[] getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Category[] categories) {
+		this.categories = categories;
 	}
 
 	@Override
 	public String toString() {
-		return "Product [id=" + pk_product + ", name=" + name + ", description=" +
-				description + ", quantity=" + quantity + ", price=" + price +
-				", image=" + image + ", category=" + category + "]";
+		return "Product [pk_product=" + pk_product + ", name=" + name +
+			", description=" + description + ", quantity="+ quantity +
+			", price=" + price + ", image=" + image + ", categories=" +
+			Arrays.toString(categories)+ "]";
 	}
-
 	
-
+	
 }

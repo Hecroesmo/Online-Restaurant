@@ -26,6 +26,10 @@
 	          font-size: 3.5rem;
 	        }
 	      }
+	      
+	      body {
+	      	padding-top: 0;
+	      }
 	    </style>
 	</head>
 	<body>

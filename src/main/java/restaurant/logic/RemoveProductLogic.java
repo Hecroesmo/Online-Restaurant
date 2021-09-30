@@ -17,5 +17,4 @@ public class RemoveProductLogic implements Logic {
 		new ProductDao(connection).removeProductById(id);
 		return "list-products.jsp";
 	}
-
 }

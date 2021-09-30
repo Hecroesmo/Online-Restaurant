@@ -8,7 +8,7 @@ public class CategoryTest {
 
 	public static void main(String[] args) {
 		System.out.println(new CategoryDao(
-			new ConnectionFactory().getConnection()).getCategoryById(1));
+			new ConnectionFactory().getConnection()).getParentCategoryById(13));
 		
 		/*	Category category = new Category();
 		category.setFkCategory(4);

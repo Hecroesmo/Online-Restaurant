@@ -120,4 +120,27 @@ public class CategoryDao {
 			throw new RuntimeException("Fail to get categories by id", e);
 		}
 	}
+	
+	public Category getParentCategoryById(int id) {
+		String sql = "SELECT * FROM category WHERE fk_category=?";
+		
+		try 
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next() == false) return null;
+			
+			Category category = new Category();
+			category.setPkCategory(resultSet.getInt("pk_category"));
+			category.setName(resultSet.getString("name"));
+			category.setFkCategory(resultSet.getInt("fk_category"));
+			
+			return category;
+		} 
+		catch (SQLException e) {
+			throw new RuntimeException("Fail to get the parent category", e);
+		}
+	}
 }

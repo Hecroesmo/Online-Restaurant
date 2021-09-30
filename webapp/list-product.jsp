@@ -1,3 +1,4 @@
+<%@page import="restaurant.model.Product"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -26,7 +27,8 @@
         </ul>
       </div>
       <div style="margin-top: 1em">
-        <a href="#" class="btn btn-primary">Editar</a>
+        <a href="alter-product.jsp?id=<%= request.getParameter("id") %>&name=<%= request.getParameter("name") %>&description=<%= request.getParameter("description") %>&price=<%= request.getParameter("price") %>&quantity=<%= request.getParameter("quantity") %>"
+         class="btn btn-primary">Editar</a>
         
         <a href="mvc?logic=RemoveProductLogic&id=<%= request.getParameter("id") %>"
          class="btn btn-danger">Remover</a>

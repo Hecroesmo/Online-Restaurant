@@ -17,6 +17,7 @@ import restaurant.dao.ProductDao;
 import restaurant.model.Category;
 import restaurant.model.Image;
 import restaurant.model.Product;
+import restaurant.utility.Constants;
 
 @WebServlet("/SaveProductServlet")
 @MultipartConfig
@@ -31,15 +32,14 @@ public class SaveProductServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		String quantity = request.getParameter("quantity");
 		String price = request.getParameter("price");
-		Part filePart = request.getPart("image");
 		String firstCategory = request.getParameter("fcategory");
 		String secondCategory = request.getParameter("scategory");
 		String thirdCategory = request.getParameter("tcategory");
+		Part filePart = request.getPart("image");
+		InputStream fileContent = filePart.getInputStream();
 		
 		/*	String fileName = Paths.get(
 			filePart.getSubmittedFileName()).getFileName().toString();	*/
-		
-		InputStream fileContent = filePart.getInputStream();
 		
 		Product product = new Product();
 		product.setName(name);
@@ -47,22 +47,23 @@ public class SaveProductServlet extends HttpServlet {
 		product.setQuantity(Integer.parseInt(quantity));
 		product.setPrice(Double.parseDouble(price));
 		
-		if (!thirdCategory.equals("Selecione...")) {
-			product.setCategory(new Category(Integer.parseInt(thirdCategory)));
+		String categories_ [] = { firstCategory, secondCategory, thirdCategory };
+		Category [] categories = new Category[ Constants.CATEGORY_NUMBER ];
+		
+		for (int counter = 0; counter < categories_.length; counter++) {
+			if ( !categories_[counter].equals("Selecione...") ) {
+				categories[counter] = new Category();
+				categories[counter].setPkCategory(Integer.parseInt(categories_[counter]));
+			}
 		}
-		else if (!secondCategory.equals("Selecione...")) {
-			product.setCategory(new Category(Integer.parseInt(secondCategory)));
-		}
-		else if (!firstCategory.equals("Selecione...")) {
-			product.setCategory(new Category(Integer.parseInt(firstCategory)));
-		}
+		
+		product.setCategories(categories);
 		
 		Connection connection = (Connection) request.getAttribute("connection");
 		new ProductDao(connection).save(product);
 		Product newProduct = new ProductDao(connection).getProductByName(name);
 		newProduct.setImage(new Image(fileContent));
-		new ImageDao(connection).save(newProduct);
-		
+		new ImageDao(connection).save(newProduct);		
 		request.getRequestDispatcher("register-product.jsp").forward(request, response);
 	}
 }
