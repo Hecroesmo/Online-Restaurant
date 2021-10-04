@@ -17,7 +17,7 @@ public class ImageDao {
 	}
 	
 	public void save(Product product) {
-		String sql = "INSERT INTO image(fk_product, image) VALUES (?, ?);";
+		String sql = "INSERT INTO image(fk_product, image) VALUES (?, ?)";
 		
 		try
 		{
@@ -47,6 +47,21 @@ public class ImageDao {
 		} 
 		catch (SQLException e) {
 			throw new RuntimeException("Fail to get image by id", e);
+		}
+	}
+	
+	public void alter(Product product) {
+		String sql = "UPDATE image SET image=? WHERE fk_product=?";
+		
+		try
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setBinaryStream(1, product.getImage().getImage());
+			statement.setInt(2, product.getPkProduct());
+			statement.executeUpdate();
+		} 
+		catch (SQLException e) {
+			throw new RuntimeException("Fail to alter image", e);
 		}
 	}
 }

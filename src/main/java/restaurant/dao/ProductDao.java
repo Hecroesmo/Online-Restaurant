@@ -152,7 +152,7 @@ public class ProductDao {
 		}
 	}
 	
-	public void alterProductById(Product product) {
+	public void alter(Product product) {
 		String sql = "UPDATE product SET name=?, quantity=?, description=?,"
 			+ " price=?, fk_fcategory=?, fk_scategory=?, fk_tcategory=? WHERE pk_product=?";
 		
@@ -166,12 +166,14 @@ public class ProductDao {
 			
 			Category [] categories = product.getCategories();
 			int counter;
+			final int FIVE = 5;
 			
 			for (counter = 0; counter < categories.length; counter++) {
-				statement.setInt( counter + 5, categories[counter].getPkCategory() );
+				statement.setInt( counter + FIVE, categories[counter].getPkCategory() );
 			}
 			
-			statement.setInt(counter, product.getPk_product());
+			statement.setInt(counter + FIVE, product.getPk_product());
+			System.out.println("ProductDao alter product: " + product);
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {

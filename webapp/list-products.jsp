@@ -46,11 +46,8 @@
 			for (Product product : products) {
 	%>
 		        <div class="col">
-		        <a href="list-product.jsp?id=<%= product.getPkProduct() %>
-		        	&name=<%= product.getName() %>
-		        	&description=<%= product.getDescription() %>
-		        	&quantity=<%= product.getQuantity() %>
-		        	&price=<%= product.getPrice() %>">
+		        <%-- do not forget that you are sending categories too --%>
+		        <a href="list-product.jsp?id=<%= product.getPkProduct() %>&name=<%= product.getName() %>&description=<%= product.getDescription() %>&quantity=<%= product.getQuantity() %>&price=<%= product.getPrice() %>&fcategory=<%= product.getCategories()[0].getPkCategory() %>&scategory=<%= product.getCategories()[1].getPkCategory() %>&tcategory=<%= product.getCategories()[2].getPkCategory() %>">
 		          <div class="card shadow-sm">
 					<img alt="<%= product.getName() %>" src="GetImageServlet?id=<%= product.getPkProduct() %>"
 					 class="bd-placeholder-img card-img-top" width="100%" height="225">

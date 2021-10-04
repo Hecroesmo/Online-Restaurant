@@ -52,9 +52,9 @@
 		
 		<div class="container">
 			<h2 style="margin: 1em 0;">Alterar Prato</h2>
-			<form action="SaveProductServlet" method="post" enctype="multipart/form-data"
+			<form action="SaveProductServlet?id=<%= request.getParameter("id") %>"
+			 method="post" enctype="multipart/form-data"
 			 class="needs-validation" novalidate>
-				<span class="hide" id="id"><%= request.getParameter("id") %></span>
 				<div style="padding-bottom: 1em;" class="row g-3">
 					 <div class="col">
 			              <label for="pName" class="form-label">Nome</label>
@@ -89,7 +89,7 @@
 				</div>
 				<div style="padding-bottom: 1em;" class="row g-3">
 		             <div class="col">
-		             	<span class="hide" id="f-category"><%= request.getParameter("id") %></span>
+		             	<span class="hide" id="f-category"><%= request.getParameter("fcategory") %></span>
 			            <label for="fcategory" class="form-label">Primeira Categoria</label>
 			            <select class="form-select" id="fcategory" name="fcategory" required>
 			            	<option value="">Selecione...</option>
@@ -103,16 +103,18 @@
 			           	</select>
 		             </div>
 		             <div class="col">
-			              <label for="scategory" class="form-label">Segunda Categoria</label>
-			              <select class="form-select" id="scategory" name="scategory">
-			              		<option value="">Selecione...</option>
-			              </select>
+		             	<span class="hide" id="s-category"><%= request.getParameter("scategory") %></span>
+			            <label for="scategory" class="form-label">Segunda Categoria</label>
+			            <select class="form-select" id="scategory" name="scategory">
+			            	<option value="">Selecione...</option>
+			            </select>
 		             </div>
 		             <div class="col">
-			              <label for="tcategory" class="form-label">Terceira Categoria</label>
-			              <select class="form-select" id="tcategory" name="tcategory">
-			              		<option value="">Selecione...</option>
-			              </select>
+		             	<span class="hide" id="t-category"><%= request.getParameter("tcategory") %></span>
+			            <label for="tcategory" class="form-label">Terceira Categoria</label>
+			            <select class="form-select" id="tcategory" name="tcategory">
+			            	<option value="">Selecione...</option>
+			            </select>
 		             </div>
 				</div>
 				
@@ -130,6 +132,5 @@
 		<script src="<c:url value="/js/bootstrap.bundle.min.js"/>"></script>
 		<script src=" <c:url value="js/category-ajax.js"/> "></script>
 		<script src="<c:url value="/js/form-validation.js"/>"></script>
-		<script src="<c:url value="js/default-option.js" />"></script>
 	</body>
 </html>

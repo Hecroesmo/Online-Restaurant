@@ -27,7 +27,7 @@
         </ul>
       </div>
       <div style="margin-top: 1em">
-        <a href="alter-product.jsp?id=<%= request.getParameter("id") %>&name=<%= request.getParameter("name") %>&description=<%= request.getParameter("description") %>&price=<%= request.getParameter("price") %>&quantity=<%= request.getParameter("quantity") %>"
+        <a href="alter-product.jsp?id=<%= request.getParameter("id") %>&name=<%= request.getParameter("name") %>&description=<%= request.getParameter("description") %>&price=<%= request.getParameter("price") %>&quantity=<%= request.getParameter("quantity") %>&fcategory=<%= request.getParameter("fcategory") %>&scategory=<%= request.getParameter("scategory") %>&tcategory=<%= request.getParameter("tcategory") %>"
          class="btn btn-primary">Editar</a>
         
         <a href="mvc?logic=RemoveProductLogic&id=<%= request.getParameter("id") %>"

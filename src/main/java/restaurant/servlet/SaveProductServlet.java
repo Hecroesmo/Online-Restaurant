@@ -28,6 +28,7 @@ public class SaveProductServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException 
 	{
+		String id = request.getParameter("id");
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");
 		String quantity = request.getParameter("quantity");
@@ -36,10 +37,10 @@ public class SaveProductServlet extends HttpServlet {
 		String secondCategory = request.getParameter("scategory");
 		String thirdCategory = request.getParameter("tcategory");
 		Part filePart = request.getPart("image");
+		
 		InputStream fileContent = filePart.getInputStream();
 		
-		/*	String fileName = Paths.get(
-			filePart.getSubmittedFileName()).getFileName().toString();	*/
+		/*	String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();	*/
 		
 		Product product = new Product();
 		product.setName(name);
@@ -58,12 +59,27 @@ public class SaveProductServlet extends HttpServlet {
 		}
 		
 		product.setCategories(categories);
-		
 		Connection connection = (Connection) request.getAttribute("connection");
-		new ProductDao(connection).save(product);
-		Product newProduct = new ProductDao(connection).getProductByName(name);
-		newProduct.setImage(new Image(fileContent));
-		new ImageDao(connection).save(newProduct);		
+		ProductDao productDao = new ProductDao(connection);
+		ImageDao imageDao = new ImageDao(connection);
+		
+		if (id != null) {
+			Product newProduct = productDao.getProductByName(name);
+			product.setPk_product(newProduct.getPk_product());
+			productDao.alter(product);	
+			
+			if (fileContent.available() != 0) {
+				product.setImage(new Image(fileContent));
+				imageDao.alter(product);	
+			}
+		}
+		else {
+			productDao.save(product);
+			Product newProduct = productDao.getProductByName(name);
+			newProduct.setImage(new Image(fileContent));
+			imageDao.save(newProduct);
+		}
+			
 		request.getRequestDispatcher("register-product.jsp").forward(request, response);
 	}
 }
