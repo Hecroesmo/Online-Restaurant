@@ -1,7 +1,7 @@
 package restaurant.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -11,7 +11,7 @@ public class Product implements Serializable {
 	private int quantity;
 	private double price;
 	private Image image;
-	private Category [] categories;
+	private List<Category> categories;
 	
 	public Product() {}
 	
@@ -82,11 +82,11 @@ public class Product implements Serializable {
 		this.pk_product = pk_product;
 	}
 
-	public Category[] getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Category[] categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
@@ -94,9 +94,7 @@ public class Product implements Serializable {
 	public String toString() {
 		return "Product [pk_product=" + pk_product + ", name=" + name +
 			", description=" + description + ", quantity="+ quantity +
-			", price=" + price + ", image=" + image + ", categories=" +
-			Arrays.toString(categories)+ "]";
+			", price=" + price + ", image=" + image + ", categories=" + categories + "]";
 	}
-	
 	
 }

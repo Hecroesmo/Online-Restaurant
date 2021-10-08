@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import restaurant.model.Category;
@@ -20,23 +21,18 @@ public class ProductDao {
 	}
 	
 	public void save(Product product) {
-		String sql = "INSERT INTO public.product(name, quantity, description,"
-			+ " price, fk_fcategory, fk_scategory, fk_tcategory) VALUES (?, ?, ?, ?, ?, ?, ?);";
+		String sql = Constants.SAVE_QUERIES[product.getCategories().size()];
 		
 		try 
 		{
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, product.getName());
-			statement.setInt(2, product.getQuantity());
-			statement.setString(3, product.getDescription());
-			statement.setDouble(4, product.getPrice());
+			setProductsFields(statement, product);
 			
-			Category [] categories = product.getCategories();
+			List<Category> categories = product.getCategories();
+			final int FIVE = 5;
+			int counter = 0;
 			
-			for (int counter = 0; counter < categories.length; counter++) {
-				statement.setInt( counter + 5, categories[counter].getPkCategory() );
-			}
-			
+			setCategories(categories, statement, FIVE, counter);
 			statement.executeUpdate();
 		} 
 		catch (SQLException e) {
@@ -59,20 +55,12 @@ public class ProductDao {
 			do 
 			{
 				Product product = new Product();
-				product.setPkProduct(resultSet.getInt("pk_product"));
-				product.setName(resultSet.getString("name"));
-				product.setQuantity(resultSet.getInt("quantity"));
-				product.setDescription(resultSet.getString("description"));
-				product.setPrice(resultSet.getDouble("price"));
+				setProductFields(resultSet, product);
 				
-				Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+				LinkedList<Category> categories = new LinkedList<Category>();				
+				setCategories(categories, resultSet);
+				product.setCategories(categories);
 				
-				for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
-					int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
-					category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
-				}
-				
-				product.setCategories(category);
 				products.add(product);
 			} 
 			while (resultSet.next());
@@ -96,20 +84,12 @@ public class ProductDao {
 			if (resultSet.next() == false) return null;
 			
 			Product product = new Product();
-			product.setPkProduct(resultSet.getInt("pk_product"));
-			product.setName(resultSet.getString("name"));
-			product.setQuantity(resultSet.getInt("quantity"));
-			product.setDescription(resultSet.getString("description"));
-			product.setPrice(resultSet.getDouble("price"));
+			setProductFields(resultSet, product);
 			
-			Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+			LinkedList<Category> categories = new LinkedList<Category>();				
+			setCategories(categories, resultSet);
+			product.setCategories(categories);
 			
-			for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
-				int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
-				category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
-			}
-			
-			product.setCategories(category);			
 			return product;
 		} 
 		catch (SQLException e) {
@@ -129,22 +109,12 @@ public class ProductDao {
 			if (resultSet.next() == false) return null;
 			
 			Product product = new Product();
-			product.setPkProduct(resultSet.getInt("pk_product"));
-			product.setName(resultSet.getString("name"));
-			product.setQuantity(resultSet.getInt("quantity"));
-			product.setDescription(resultSet.getString("description"));
-			product.setPrice(resultSet.getDouble("price"));
+			setProductFields(resultSet, product);
 			
-			Category category [] = new Category[ Constants.CATEGORY_NUMBER ];
+			LinkedList<Category> categories = new LinkedList<Category>();				
+			setCategories(categories, resultSet);
+			product.setCategories(categories);	
 			
-			for (int counter = 0; counter < Constants.CATEGORY_NUMBER; counter++) {
-				int categoryId = resultSet.getInt( Constants.CATEGORY_NAME[counter] );
-				category[counter] = new CategoryDao(connection).getCategoryById(categoryId);
-			}
-			
-			product.setCategories(category);			
-			product.setImage(new ImageDao(connection).getImageById(
-				resultSet.getInt("pk_product")));
 			return product;
 		} 
 		catch (SQLException e) {
@@ -153,27 +123,19 @@ public class ProductDao {
 	}
 	
 	public void alter(Product product) {
-		String sql = "UPDATE product SET name=?, quantity=?, description=?,"
-			+ " price=?, fk_fcategory=?, fk_scategory=?, fk_tcategory=? WHERE pk_product=?";
+		String sql = Constants.UPDATE_QUERIES[product.getCategories().size()];
 		
 		try 
 		{
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, product.getName());
-			statement.setInt(2, product.getQuantity());
-			statement.setString(3, product.getDescription());
-			statement.setDouble(4, product.getPrice());
+			setProductsFields(statement, product);
 			
-			Category [] categories = product.getCategories();
-			int counter;
+			List<Category> categories = product.getCategories();
 			final int FIVE = 5;
+			int counter = 0;
 			
-			for (counter = 0; counter < categories.length; counter++) {
-				statement.setInt( counter + FIVE, categories[counter].getPkCategory() );
-			}
-			
+			counter = setCategories(categories, statement, FIVE, counter);
 			statement.setInt(counter + FIVE, product.getPk_product());
-			System.out.println("ProductDao alter product: " + product);
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -194,5 +156,81 @@ public class ProductDao {
 			throw new RuntimeException("Fail to remove the product", e);
 		}
 	}
+	
+	//---------------------------------------------------------- Support methods
+	
+	private int setCategories(List<Category> categories,
+		PreparedStatement statement, int FIVE, int counter) throws SQLException 
+	{
+		for (counter = 0; counter < categories.size(); counter++) {
+			statement.setInt( counter + FIVE, categories.get(counter).getPkCategory() );
+		}
+		
+		return counter;
+	}
+	
+	private void setCategories(List<Category> categories, ResultSet rs)
+			throws SQLException 
+	{
+		int categoryId, counter = 0;
+		
+		do 
+		{
+			categoryId = rs.getInt(
+				Constants.CATEGORY_NAME[counter]);
+			
+			categories.add(
+				new CategoryDao(connection).getCategoryById(categoryId));
+			
+			counter++;
+		} 
+		while (categoryId != 0 && counter < Constants.CATEGORY_NUMBER);
+	}
+	
+	private void setProductsFields(PreparedStatement statement, Product product )
+			throws SQLException 
+	{
+		statement.setString(1, product.getName());
+		statement.setInt(2, product.getQuantity());
+		statement.setString(3, product.getDescription());
+		statement.setDouble(4, product.getPrice());
+	}
+	
+	private void setProductFields(ResultSet rs, Product product) 
+			throws SQLException 
+	{
+		product.setPkProduct(rs.getInt("pk_product"));
+		product.setName(rs.getString("name"));
+		product.setQuantity(rs.getInt("quantity"));
+		product.setDescription(rs.getString("description"));
+		product.setPrice(rs.getDouble("price"));
+	}
+	
+	/*	private String setNumberOfUpdatingParameter(int size) {
+		switch (size) {
+		case 1: return "UPDATE product SET name=?, quantity=?, description=?,"
+			+ " price=?, fk_fcategory=? WHERE pk_product=?";
+		
+		case 2: return "UPDATE product SET name=?, quantity=?, description=?,"
+			+ " price=?, fk_fcategory=?, fk_scategory=? WHERE pk_product=?";
+		
+		default : return "UPDATE product SET name=?, quantity=?, description=?,"
+			+ " price=?, fk_fcategory=?, fk_scategory=?, fk_tcategory=? WHERE pk_product=?";
+		}
+	}	*/
+	
+	/*	private String setNumberOfSavingParameter(int size) 
+	{ 
+		switch (size) {
+		case 1: return "INSERT INTO product(name, quantity, description, price,"
+			+ " fk_fcategory) VALUES (?, ?, ?, ?, ?)";
+		
+		case 2: return "INSERT INTO product(name, quantity, description, price,"
+			+ " fk_fcategory, fk_scategory) VALUES (?, ?, ?, ?, ?, ?)";
+		
+		default: return "INSERT INTO product(name, quantity, description, price,"
+			+ " fk_fcategory, fk_scategory, fk_tcategory) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		}
+	}	*/
 
 }

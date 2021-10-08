@@ -24,10 +24,11 @@
           <li class="list-group-item">Código: <%= request.getParameter("id") %></li>
           <li class="list-group-item">Quantidade: <%= request.getParameter("quantity") %></li>
           <li class="list-group-item">Preço: <%= request.getParameter("price") %></li>
+          <li class="list-group-item">Categoria: <%= request.getParameter("category") %></li>
         </ul>
       </div>
       <div style="margin-top: 1em">
-        <a href="alter-product.jsp?id=<%= request.getParameter("id") %>&name=<%= request.getParameter("name") %>&description=<%= request.getParameter("description") %>&price=<%= request.getParameter("price") %>&quantity=<%= request.getParameter("quantity") %>&fcategory=<%= request.getParameter("fcategory") %>&scategory=<%= request.getParameter("scategory") %>&tcategory=<%= request.getParameter("tcategory") %>"
+        <a href="alter-product.jsp?id=<%= request.getParameter("id") %>&name=<%= request.getParameter("name") %>&description=<%= request.getParameter("description") %>&price=<%= request.getParameter("price") %>&quantity=<%= request.getParameter("quantity") %>"
          class="btn btn-primary">Editar</a>
         
         <a href="mvc?logic=RemoveProductLogic&id=<%= request.getParameter("id") %>"

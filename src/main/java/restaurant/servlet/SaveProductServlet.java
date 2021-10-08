@@ -3,6 +3,7 @@ package restaurant.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -17,7 +18,6 @@ import restaurant.dao.ProductDao;
 import restaurant.model.Category;
 import restaurant.model.Image;
 import restaurant.model.Product;
-import restaurant.utility.Constants;
 
 @WebServlet("/SaveProductServlet")
 @MultipartConfig
@@ -49,12 +49,11 @@ public class SaveProductServlet extends HttpServlet {
 		product.setPrice(Double.parseDouble(price));
 		
 		String categories_ [] = { firstCategory, secondCategory, thirdCategory };
-		Category [] categories = new Category[ Constants.CATEGORY_NUMBER ];
+		LinkedList<Category> categories = new LinkedList<Category>();
 		
 		for (int counter = 0; counter < categories_.length; counter++) {
 			if ( !categories_[counter].equals("Selecione...") ) {
-				categories[counter] = new Category();
-				categories[counter].setPkCategory(Integer.parseInt(categories_[counter]));
+				categories.add(new Category(Integer.parseInt(categories_[counter])));
 			}
 		}
 		

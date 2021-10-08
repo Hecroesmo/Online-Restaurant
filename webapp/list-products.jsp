@@ -36,7 +36,7 @@
 	<body>
 	<%
 		Connection connection = ( Connection ) request.getAttribute("connection");
-		List<Product> products = new ProductDao(connection).getProducts();		
+		List<Product> products = new ProductDao(connection).getProducts();	
 	%>
 		<jsp:include page="admin-header.jsp"></jsp:include>		
 		
@@ -46,8 +46,7 @@
 			for (Product product : products) {
 	%>
 		        <div class="col">
-		        <%-- do not forget that you are sending categories too --%>
-		        <a href="list-product.jsp?id=<%= product.getPkProduct() %>&name=<%= product.getName() %>&description=<%= product.getDescription() %>&quantity=<%= product.getQuantity() %>&price=<%= product.getPrice() %>&fcategory=<%= product.getCategories()[0].getPkCategory() %>&scategory=<%= product.getCategories()[1].getPkCategory() %>&tcategory=<%= product.getCategories()[2].getPkCategory() %>">
+		        <a href="list-product.jsp?id=<%= product.getPkProduct() %>&name=<%= product.getName() %>&description=<%= product.getDescription() %>&quantity=<%= product.getQuantity() %>&price=<%= product.getPrice() %>">
 		          <div class="card shadow-sm">
 					<img alt="<%= product.getName() %>" src="GetImageServlet?id=<%= product.getPkProduct() %>"
 					 class="bd-placeholder-img card-img-top" width="100%" height="225">
