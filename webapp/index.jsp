@@ -1,3 +1,7 @@
+<%@page import="restaurant.dao.ProductDao"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="restaurant.model.Product"%>
+<%@page import="java.util.List"%>
 <%@page import="restaurant.model.AccountType"%>
 <%@page import="restaurant.model.Account"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
@@ -36,6 +40,8 @@
 	<%
 		Account account = (Account) request.getSession().getAttribute("account");
 		AccountType type = null;
+		Connection connection = (Connection) request.getAttribute("connection");
+		List<Product> fastFoodProducts = new ProductDao(connection).getProductByCategoryName("Fast Food"); 
 		
 		if (account == null) {
 			type = new AccountType("annonymous");
@@ -55,55 +61,45 @@
 	%>
 		<jsp:include page="header.jsp"></jsp:include>
 		<div id="myCarousel" class="container carousel slide" data-bs-ride="carousel">
-	    <div class="carousel-indicators">
+		
+	    <%-- <div class="carousel-indicators">
 	      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
 	      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
 	      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-	    </div>
+	    </div>	--%>
+	    
 	    <div class="carousel-inner">
-	      <div class="carousel-item active">
-	        <img alt="" src="<c:url value="img/burger-1835192_1920.jpg" />">
+	<%
+		for (Product fastFood : fastFoodProducts) {
+	%>
+			<div class="carousel-item">
+	        <img alt="" src="GetImageServlet?id=<%= fastFood.getPk_product() %>" />">
 	
 	        <div class="container">
 	          <div class="carousel-caption text-start">
-	            <h1>Example headline.</h1>
-	            <p>Some representative placeholder content for the first slide of the carousel.</p>
-	            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+	            <h1><%= fastFood.getName() %>.</h1>
+	            <p><%= fastFood.getDescription() %>.</p>
+	            <p><a class="btn btn-lg btn-primary" href="#">Encomende Agora</a></p>
 	          </div>
 	        </div>
 	      </div>
-	      <div class="carousel-item">
-	        <img alt="" src="<c:url value="img/burger-3962996_1920.jpg" />">
-	
-	        <div class="container">
-	          <div class="carousel-caption">
-	            <h1>Another example headline.</h1>
-	            <p>Some representative placeholder content for the second slide of the carousel.</p>
-	            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
-	          </div>
-	        </div>
-	      </div>
-	      <div class="carousel-item">
-	        <img alt="" src="<c:url value="img/sandwich-434658_1920.jpg" />">
-	
-	        <div class="container">
-	          <div class="carousel-caption text-end">
-	            <h1>One more for good measure.</h1>
-	            <p>Some representative placeholder content for the third slide of this carousel.</p>
-	            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
+	<%
+		}
+	%>
+	    </div>	
 	    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
 	      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-	      <span class="visually-hidden">Previous</span>
+	      <span class="visually-hidden">Anterior</span>
 	    </button>
 	    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
 	      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-	      <span class="visually-hidden">Next</span>
+	      <span class="visually-hidden">Próximo</span>
 	    </button>
 	  </div>
+	  <script>
+	  	var products = document.getElementsByClassName('carousel-item')
+	  	products[0].classList.add('active')
+	  </script>
 	  <script src="<c:url value="/js/bootstrap.bundle.min.js"/>"></script>
 	</body>
 </html>

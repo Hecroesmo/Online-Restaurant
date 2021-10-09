@@ -122,6 +122,42 @@ public class ProductDao {
 		}
 	}
 	
+	public List<Product> getProductByCategoryName(String categoryName) {
+		String sql = "SELECT * FROM product "
+			+ "WHERE fk_fcategory = ? or fk_scategory = ? or fk_tcategory = ?";
+		
+		try 
+		{
+			Category category = new CategoryDao(connection).getCategoryByName("Fast Food");
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, category.getPkCategory());
+			statement.setInt(2, category.getPkCategory());
+			statement.setInt(3, category.getPkCategory());
+			
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next() == false) return null;
+			
+			List<Product> products = new LinkedList<Product>();
+			
+			do 
+			{
+				Product product = new Product();
+				setProductFields(resultSet, product);
+				LinkedList<Category> categories = new LinkedList<Category>();				
+				setCategories(categories, resultSet);
+				product.setCategories(categories);
+				products.add(product);
+			} 
+			while ( resultSet.next() );	
+			
+			return products;
+		} 
+		catch (SQLException e) {
+			throw new RuntimeException("Fail to get product by category name", e);
+		}
+	}
+	
 	public void alter(Product product) {
 		String sql = Constants.UPDATE_QUERIES[product.getCategories().size()];
 		
@@ -205,32 +241,4 @@ public class ProductDao {
 		product.setDescription(rs.getString("description"));
 		product.setPrice(rs.getDouble("price"));
 	}
-	
-	/*	private String setNumberOfUpdatingParameter(int size) {
-		switch (size) {
-		case 1: return "UPDATE product SET name=?, quantity=?, description=?,"
-			+ " price=?, fk_fcategory=? WHERE pk_product=?";
-		
-		case 2: return "UPDATE product SET name=?, quantity=?, description=?,"
-			+ " price=?, fk_fcategory=?, fk_scategory=? WHERE pk_product=?";
-		
-		default : return "UPDATE product SET name=?, quantity=?, description=?,"
-			+ " price=?, fk_fcategory=?, fk_scategory=?, fk_tcategory=? WHERE pk_product=?";
-		}
-	}	*/
-	
-	/*	private String setNumberOfSavingParameter(int size) 
-	{ 
-		switch (size) {
-		case 1: return "INSERT INTO product(name, quantity, description, price,"
-			+ " fk_fcategory) VALUES (?, ?, ?, ?, ?)";
-		
-		case 2: return "INSERT INTO product(name, quantity, description, price,"
-			+ " fk_fcategory, fk_scategory) VALUES (?, ?, ?, ?, ?, ?)";
-		
-		default: return "INSERT INTO product(name, quantity, description, price,"
-			+ " fk_fcategory, fk_scategory, fk_tcategory) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		}
-	}	*/
-
 }

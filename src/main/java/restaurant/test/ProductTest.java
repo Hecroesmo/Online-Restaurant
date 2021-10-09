@@ -7,6 +7,6 @@ public class ProductTest {
 
 	public static void main(String[] args) {
 		System.out.println(new ProductDao(
-			new ConnectionFactory().getConnection()).getProducts());
+			new ConnectionFactory().getConnection()).getProductByCategoryName("Fast Food"));
 	}
 }

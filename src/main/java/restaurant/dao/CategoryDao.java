@@ -63,6 +63,30 @@ public class CategoryDao {
 		}
 	}
 	
+	public Category getCategoryByName(String name) {
+		String sql = "SELECT * FROM category WHERE name = ?";
+		
+		try 
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, name);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next() == false) return null;
+			
+			Category category = new Category();
+			category.setPkCategory(resultSet.getInt("pk_category"));
+			category.setName(resultSet.getString("name"));
+			category.setFkCategory(resultSet.getInt("fk_category"));
+			
+			return category;
+		} 
+		catch (SQLException e) 
+		{
+			throw new RuntimeException("Fail to get categories by name", e);
+		}
+	}
+	
 	public List<Category> getFirstLevelCategories() {
 		String sql = "SELECT * FROM category WHERE fk_category IS NULL";
 		
@@ -121,7 +145,7 @@ public class CategoryDao {
 		}
 	}
 	
-	public Category getParentCategoryById(int id) {
+	/*	public Category getParentCategoryById(int id) {
 		String sql = "SELECT * FROM category WHERE fk_category=?";
 		
 		try 
@@ -142,5 +166,5 @@ public class CategoryDao {
 		catch (SQLException e) {
 			throw new RuntimeException("Fail to get the parent category", e);
 		}
-	}
+	}	*/
 }
