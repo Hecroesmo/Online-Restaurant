@@ -1,5 +1,6 @@
 package restaurant.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,6 +46,29 @@ public class ImageDao {
 			Image image = new Image(resultSet.getBinaryStream("image"));
 			return image;
 		} 
+		catch (SQLException e) {
+			throw new RuntimeException("Fail to get image by id", e);
+		}
+	}
+	
+	public byte[] getImageBytesById(int id) {
+		String sql = "SELECT * FROM image WHERE fk_product = ?";
+		
+		try 
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next() == false) return null;
+			
+			Image image = new Image(resultSet.getBinaryStream("image"));
+			return image.getImage().readAllBytes();
+			
+		} 
+		catch (IOException e) {
+			throw new RuntimeException("Fail to get image bytes", e);
+		}
 		catch (SQLException e) {
 			throw new RuntimeException("Fail to get image by id", e);
 		}

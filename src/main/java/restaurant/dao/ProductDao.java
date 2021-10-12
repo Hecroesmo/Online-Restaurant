@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import restaurant.model.Category;
+import restaurant.model.Image;
 import restaurant.model.Product;
 import restaurant.utility.Constants;
 
@@ -147,6 +148,10 @@ public class ProductDao {
 				LinkedList<Category> categories = new LinkedList<Category>();				
 				setCategories(categories, resultSet);
 				product.setCategories(categories);
+				
+				product.setImage(new Image(
+					new ImageDao(connection).getImageBytesById(product.getPk_product())));
+				
 				products.add(product);
 			} 
 			while ( resultSet.next() );	

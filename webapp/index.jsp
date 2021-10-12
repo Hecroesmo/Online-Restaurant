@@ -11,7 +11,7 @@
 <html lang="pt">
 	<head>
 		<meta charset="utf-8">
-		<title>Bem vindo ao Appetito</title>
+		<title>Appetito | Bem vindo</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="<c:url value="/css/reset.css" />" rel="stylesheet">
 		<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet">
@@ -73,13 +73,13 @@
 		for (Product fastFood : fastFoodProducts) {
 	%>
 			<div class="carousel-item">
-	        <img alt="" src="GetImageServlet?id=<%= fastFood.getPk_product() %>" />">
+	        <img alt="<%= fastFood.getName() %>" src="GetImageServlet?id=<%= fastFood.getPk_product() %>" />">
 	
 	        <div class="container">
 	          <div class="carousel-caption text-start">
 	            <h1><%= fastFood.getName() %>.</h1>
 	            <p><%= fastFood.getDescription() %>.</p>
-	            <p><a class="btn btn-lg btn-primary" href="#">Encomende Agora</a></p>
+	            <p><a class="btn btn-lg btn-danger" href="#">Pedir Agora</a></p>
 	          </div>
 	        </div>
 	      </div>

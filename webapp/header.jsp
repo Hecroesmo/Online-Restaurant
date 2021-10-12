@@ -56,15 +56,29 @@
 				else {
 			%>
 				<div class="col-md-3 text-end">
+			        <a href="list-products-users.jsp" class="btn btn-danger me-2">Pedir</a>
+			        
+			        <div class="btn-group">
+			          <button type="button" class="btn btn-success"><%= account.getUsername() %></button>
+			          <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split"
+			           data-bs-toggle="dropdown" aria-expanded="false">
+			            <span class="visually-hidden">Toggle Dropdown</span>
+			          </button>
+			          <ul class="dropdown-menu">
+			            <%-- <li><a class="dropdown-item" href="#"></a></li> --%>
+			            <li><a class="dropdown-item" href="mvc?logic=LogoutLogic">Sair</a></li>
+			          </ul>
+			        </div>
+			    </div>
+			    
+				<%--  <div class="col-md-3 text-end">
 			        <a href="#" class="btn btn-outline-danger me-2 disabled"><%= account.getUsername() %></a>
 			        <a href="mvc?logic=LogoutLogic" class="btn btn-danger">Sair</a>
-			    </div>
+			    </div>	--%>
 			<%
 				}
 			%>		
-		      
 		    </header>
   		</div>
-  		<script src="<c:url value="/js/bootstrap.bundle.min.js"/>"></script>
 	</body>
 </html>

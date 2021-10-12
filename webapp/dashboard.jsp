@@ -70,7 +70,6 @@
 		              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonSM">
 			              <li><a class="dropdown-item" href="register-product.jsp">Cadastrar</a></li>
 			              <li><a class="dropdown-item" href="list-products.jsp">Listar</a></li>
-
 		              </ul>
 		          </li>
 		          <li class="nav-item">
