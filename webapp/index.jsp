@@ -77,7 +77,7 @@
 	
 	        <div class="container">
 	          <div class="carousel-caption text-start">
-	            <h1><%= fastFood.getName() %>.</h1>
+	            <h1><%= fastFood.getName() %></h1>
 	            <p><%= fastFood.getDescription() %>.</p>
 	            <p><a class="btn btn-lg btn-danger" href="#">Pedir Agora</a></p>
 	          </div>
